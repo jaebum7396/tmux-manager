@@ -418,12 +418,6 @@ right_pane=$(tmux split-window -h -t "$MGR_SESSION" -l "$right_cols" -d -P -F '#
 # Get left pane and run selector in it
 left_pane=$(tmux list-panes -t "$MGR_SESSION" -F '#{pane_id}' | head -1)
 
-# Tab to toggle between panes (only in manager session, passthrough otherwise)
-tmux bind-key -T root Tab if-shell -F \
-    "#{==:#{session_name},$MGR_SESSION}" \
-    "select-pane -t :.+" \
-    "send-keys Tab"
-
 tmux respawn-pane -k -t "$left_pane" "$SELF --run-selector $right_pane"
 
 # Attach/switch to manager
