@@ -403,8 +403,12 @@ fi
 tmux new-session -d -s "$MGR_SESSION" -x "$mgr_cols" -y "$mgr_lines"
 
 # Configure: Ctrl+a prefix so Ctrl+b passes through to inner session
-tmux set-option -t "$MGR_SESSION" prefix C-a
+tmux set-option -t "$MGR_SESSION" prefix None
 tmux set-option -t "$MGR_SESSION" -u prefix2
+tmux bind-key -T root C-a if-shell -F \
+    "#{==:#{session_name},$MGR_SESSION}" \
+    "select-pane -t :.+" \
+    "send-keys C-a"
 tmux set-option -t "$MGR_SESSION" mouse on
 tmux set-option -t "$MGR_SESSION" repeat-time 0
 tmux set-option -t "$MGR_SESSION" status-left ' #[fg=green,bold]MGR#[default] '
